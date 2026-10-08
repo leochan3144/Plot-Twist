@@ -1,0 +1,1091 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Plot Twist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap">
+<style>
+/* Layout: exercise-book graph paper; each topic zone owns one pen colour; the graph stage is the hero of every screen. */
+:root{
+  --paper:#eef4f2; --paper-grid:#dfeae6; --sheet:#ffffff; --grid:#e1eeea; --grid-strong:#bcd8d0;
+  --ink:#14223d; --muted:#56667c; --ghost:rgba(20,34,61,.32); --chip:#e6eeeb;
+  --c1:#2b58e0; --c2:#c92d76; --c3:#d76204; --c4:#0a8a6b;
+  --good:#16834a; --good-bg:#e3f4ea; --bad:#cf3a2b; --bad-bg:#fbe7e4; --star:#e3a008;
+  --f-display:"Bricolage Grotesque","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-math:"STIX Two Text","Cambria Math","Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0e1524; --paper-grid:#141e31; --sheet:#151f33; --grid:#1c2840; --grid-strong:#2c3d60;
+    --ink:#e7edf7; --muted:#9aa8bf; --ghost:rgba(231,237,247,.34); --chip:#1d2a42;
+    --c1:#7d9cff; --c2:#ff6aab; --c3:#ff9f45; --c4:#3dd4a6;
+    --good:#4bd88a; --good-bg:#14301f; --bad:#ff6d60; --bad-bg:#3a1a19; --star:#ffc53d;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0e1524; --paper-grid:#141e31; --sheet:#151f33; --grid:#1c2840; --grid-strong:#2c3d60;
+  --ink:#e7edf7; --muted:#9aa8bf; --ghost:rgba(231,237,247,.34); --chip:#1d2a42;
+  --c1:#7d9cff; --c2:#ff6aab; --c3:#ff9f45; --c4:#3dd4a6;
+  --good:#4bd88a; --good-bg:#14301f; --bad:#ff6d60; --bad-bg:#3a1a19; --star:#ffc53d;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{
+  background-color:var(--paper); color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.5;
+  background-image:linear-gradient(var(--paper-grid) 1px,transparent 1px),linear-gradient(90deg,var(--paper-grid) 1px,transparent 1px);
+  background-size:26px 26px; min-height:100vh;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--c1);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding-inline:16px}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(6px);border-bottom:2px solid var(--ink)}
+.bar .wrap{display:flex;align-items:center;gap:12px;padding-block:10px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em;background:none;border:0;padding:0}
+.brand span{color:var(--c2)}
+.bar .spacer{flex:1}
+.score{font-family:var(--f-mono);font-size:.85rem;background:var(--sheet);border:2px solid var(--ink);border-radius:8px;padding:4px 10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.score b{font-weight:600}
+.iconbtn{border:2px solid var(--ink);background:var(--sheet);border-radius:8px;padding:4px 10px;font-size:.85rem;font-weight:600}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:.5em;border:2px solid var(--ink);background:var(--sheet);border-radius:10px;padding:.6em 1.15em;font-weight:700;box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.primary{background:var(--ink);color:var(--sheet)}
+.btn.small{padding:.4em .8em;font-size:.9rem}
+.linkbtn{background:none;border:0;padding:4px 0;font-weight:600;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+.m{font-family:var(--f-math);font-style:normal;white-space:nowrap}
+.m i{font-style:italic}
+.m sup{font-size:.7em;vertical-align:.55em;line-height:0}
+.m sub{font-size:.7em;vertical-align:-.3em;line-height:0}
+
+/* home */
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:32px;align-items:center;padding-block:40px 28px}
+.eyebrow{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(3.4rem,10vw,7rem);line-height:.86;letter-spacing:-.045em;margin:0 0 18px}
+h1 .tw{display:inline-flex;color:var(--c2)}
+h1 .tw span{display:inline-block}
+.lede{font-size:1.15rem;max-width:34ch;margin:0 0 22px;color:var(--ink)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero-fig{margin:0;background:var(--sheet);border:2px solid var(--ink);border-radius:14px;padding:10px;box-shadow:6px 6px 0 var(--ink)}
+.hero-fig canvas{display:block;width:100%;border-radius:8px}
+.hero-fig figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 6px 2px;font-size:1.35rem;min-height:2.4em}
+.hero-fig figcaption small{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.sec{font-family:var(--f-display);font-weight:700;font-size:1.5rem;letter-spacing:-.02em;margin:0 0 14px}
+.zone-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:18px}
+.zcard{display:flex;flex-direction:column;gap:10px;text-align:left;background:var(--sheet);border:2px solid var(--ink);border-radius:14px;padding:12px;box-shadow:5px 5px 0 var(--z);transition:transform .1s,box-shadow .1s}
+.zcard:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--z)}
+.zcard canvas{display:block;width:100%;border-radius:8px}
+.zcard h3{font-family:var(--f-display);font-weight:800;font-size:1.3rem;margin:0;letter-spacing:-.02em;color:var(--z)}
+.zcard p{margin:0;color:var(--muted);font-size:.92rem}
+.zcard .meta{display:flex;justify-content:space-between;align-items:center;margin-top:auto;font-family:var(--f-mono);font-size:.8rem}
+.stars{color:var(--star);letter-spacing:1px;font-size:.95rem}
+.stars .off{color:var(--grid-strong)}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;padding-block:36px 56px}
+.how div{border-top:2px solid var(--ink);padding-top:10px}
+.how h3{font-family:var(--f-display);font-size:1.1rem;margin:0 0 4px}
+.how p{margin:0;color:var(--muted);font-size:.93rem}
+.mixcard{--z:var(--ink)}
+.mixcard h3{color:var(--ink)}
+
+/* intro / notes */
+.intro{padding-block:28px 56px}
+.intro-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:16px;margin-bottom:20px}
+.intro h2{font-family:var(--f-display);font-weight:800;font-size:clamp(2.2rem,6vw,3.4rem);letter-spacing:-.03em;line-height:1;margin:4px 0 0;color:var(--z)}
+.notes{display:grid;gap:18px}
+.note{background:var(--sheet);border:2px solid var(--ink);border-radius:14px;padding:18px}
+.note h3{font-family:var(--f-display);font-size:1.25rem;margin:0 0 6px;letter-spacing:-.01em}
+.note p{margin:0 0 8px;max-width:68ch}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:10px}
+.figs figure{margin:0}
+.figs canvas{display:block;width:100%;border:1.5px solid var(--grid-strong);border-radius:8px}
+.figs figcaption{font-size:.85rem;color:var(--muted);text-align:center;margin-top:4px}
+.foot{font-size:.92rem;background:var(--chip);border-radius:8px;padding:8px 12px;display:inline-block}
+.tablewrap{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;font-size:.92rem;min-width:520px;width:100%}
+th,td{border:1.5px solid var(--grid-strong);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--chip);font-weight:600}
+td{font-variant-numeric:tabular-nums}
+.start-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+
+/* play */
+.play{padding-block:18px 56px}
+.hud{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:18px}
+.ztag{font-family:var(--f-display);font-weight:800;color:var(--z);font-size:1.1rem}
+.dots{display:flex;gap:5px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.dots li{width:22px;height:8px;border-radius:4px;background:var(--grid-strong)}
+.dots li.cur{background:var(--ink)}
+.dots li.star{background:var(--star)}
+.dots li.done{background:var(--z)}
+.streak{font-family:var(--f-mono);font-size:.8rem;border:2px solid var(--ink);border-radius:999px;padding:2px 10px;background:var(--sheet)}
+.streak.hot{background:var(--star);color:#1b1300;border-color:#1b1300}
+.hud .spacer{flex:1}
+.pgrid{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);grid-template-areas:"q stage" "ctrl stage" "fb stage";grid-template-rows:auto auto 1fr;gap:16px 28px;align-items:start}
+.pgrid.solo{grid-template-columns:minmax(0,640px);grid-template-areas:"q" "ctrl" "fb";justify-content:center}
+.qbox{grid-area:q}
+.kind{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--z);margin:0 0 6px;font-weight:600}
+.qtext{font-family:var(--f-display);font-weight:700;font-size:1.45rem;line-height:1.2;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.bigeq{font-size:1.75rem;margin-top:10px;line-height:1.3}
+.ctrl{grid-area:ctrl;display:grid;gap:10px}
+.fbz{grid-area:fb}
+.stage{grid-area:stage;background:var(--sheet);border:2px solid var(--ink);border-radius:14px;padding:10px;box-shadow:6px 6px 0 var(--z);min-width:0}
+.stage canvas{display:block;width:100%;border-radius:8px}
+.stage canvas.tap{touch-action:none;cursor:crosshair}
+.stage .cap{display:flex;justify-content:space-between;gap:12px;font-size:.82rem;color:var(--muted);padding:8px 4px 2px;font-family:var(--f-mono)}
+.placeholder{display:grid;place-items:center;aspect-ratio:16/10;border-radius:8px;border:2px dashed var(--grid-strong);color:var(--muted);text-align:center;padding:16px;font-size:.95rem}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--sheet);border:2px solid var(--ink);border-radius:10px;padding:10px 14px;font-size:1.05rem;box-shadow:0 3px 0 var(--ink);transition:transform .08s}
+.opt:hover:not(:disabled){transform:translateY(-1px)}
+.opt .k{font-family:var(--f-mono);font-size:.75rem;font-weight:600;border:1.5px solid currentColor;border-radius:6px;padding:0 6px;flex:none;opacity:.75}
+.opt .m{font-size:1.2rem}
+.opt.right{background:var(--good-bg);border-color:var(--good);box-shadow:0 3px 0 var(--good)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);box-shadow:0 3px 0 var(--bad);opacity:.8}
+.opt:disabled{cursor:default}
+.shake{animation:shake .35s}
+@keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pk{position:relative;display:flex;flex-direction:column;gap:6px;background:var(--sheet);border:2px solid var(--grid-strong);border-radius:10px;padding:6px;text-align:left}
+.pk:hover:not(:disabled){border-color:var(--ink)}
+.pk canvas{display:block;width:100%;border-radius:6px}
+.pk .lab{position:absolute;top:10px;left:10px;font-family:var(--f-mono);font-size:.75rem;font-weight:600;background:var(--ink);color:var(--sheet);border-radius:5px;padding:1px 7px}
+.pk .peq{min-height:1.5em;font-size:1.05rem;padding:0 4px;color:var(--muted)}
+.pk.right{border-color:var(--good);box-shadow:0 0 0 2px var(--good)}
+.pk.wrong{border-color:var(--bad);opacity:.6}
+.pk:disabled{cursor:default}
+.check{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.check li{display:flex;justify-content:space-between;align-items:center;gap:10px;border:2px dashed var(--grid-strong);border-radius:10px;padding:8px 12px}
+.check li.got{border-style:solid;border-color:var(--z);background:color-mix(in srgb,var(--z) 10%,var(--sheet))}
+.check li span:last-child{font-family:var(--f-mono);font-size:.85rem;color:var(--muted)}
+.check li.got span:last-child{color:var(--ink)}
+.tip{font-size:.88rem;color:var(--muted);margin:0}
+.slider{display:grid;grid-template-columns:2.2em 1fr 3.6em;align-items:center;gap:10px;background:var(--sheet);border:2px solid var(--ink);border-radius:10px;padding:8px 12px}
+.slider .m{font-size:1.3rem}
+.slider input{width:100%;accent-color:var(--z)}
+.slider output{font-family:var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+.live{background:var(--chip);border-radius:10px;padding:10px 14px}
+.live .m{font-size:1.45rem}
+.live p{margin:4px 0 0;font-size:.9rem;color:var(--muted)}
+.fb{border:2px solid;border-radius:12px;padding:12px 14px;animation:pop .25s ease-out}
+.fb.good{border-color:var(--good);background:var(--good-bg)}
+.fb.bad{border-color:var(--bad);background:var(--bad-bg)}
+.fb.info{border-color:var(--grid-strong);background:var(--sheet)}
+.fb .h{font-family:var(--f-display);font-weight:800;font-size:1.15rem;margin:0 0 4px;display:flex;justify-content:space-between;gap:10px}
+.fb .h .pts{font-family:var(--f-mono);font-size:.85rem;font-weight:600}
+.fb p{margin:0 0 6px}
+.fb .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+@keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+
+/* end */
+.end{padding-block:40px 60px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:start}
+.end h2{font-family:var(--f-display);font-weight:800;font-size:clamp(2.4rem,7vw,4rem);line-height:.95;letter-spacing:-.03em;margin:6px 0 14px}
+.bigstars{font-size:2.2rem;letter-spacing:4px;color:var(--star);margin-bottom:10px;word-break:break-all}
+.bigstars .off{color:var(--grid-strong)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0 22px}
+.stats div{background:var(--sheet);border:2px solid var(--ink);border-radius:10px;padding:10px}
+.stats b{display:block;font-family:var(--f-mono);font-size:1.4rem;font-variant-numeric:tabular-nums}
+.stats span{font-size:.8rem;color:var(--muted)}
+.recap{background:var(--sheet);border:2px solid var(--ink);border-radius:14px;padding:18px;box-shadow:6px 6px 0 var(--z)}
+.recap h3{font-family:var(--f-display);margin:0 0 8px}
+.recap ul{margin:0;padding-left:1.2em;display:grid;gap:6px}
+
+/* drawer */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(10,16,30,.45);display:flex;justify-content:flex-end}
+.drawer{width:min(560px,100%);height:100%;overflow-y:auto;background:var(--paper);border-left:2px solid var(--ink);padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;position:sticky;top:0;background:var(--paper);padding-block:6px;z-index:1}
+.drawer-head h2{font-family:var(--f-display);margin:0;font-size:1.4rem;color:var(--z)}
+
+@media (max-width:820px){
+  .hero{grid-template-columns:minmax(0,1fr);padding-block:24px 16px}
+  .pgrid,.pgrid.solo{grid-template-columns:minmax(0,1fr);grid-template-areas:"q" "stage" "ctrl" "fb";grid-template-rows:auto}
+  .end{grid-template-columns:minmax(0,1fr)}
+  .qtext{font-size:1.25rem}
+  .bigeq{font-size:1.5rem}
+}
+@media (max-width:420px){
+  .picks{gap:8px}
+  .score .lbl{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+
+<header class="bar"><div class="wrap">
+  <button class="brand" id="brand" aria-label="Plot Twist home">Plot <span>Twist</span></button>
+  <div class="spacer"></div>
+  <span class="score"><span class="lbl">Score </span><b id="score">0</b></span>
+  <button class="iconbtn" id="sound" aria-pressed="true">Sound on</button>
+</div></header>
+<main id="screen" class="wrap"></main>
+<div id="overlay" class="overlay" hidden></div>
+
+<script>
+(() => {
+/* ---------- helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const DEG = Math.PI / 180;
+const sind = x => Math.sin(x * DEG), cosd = x => Math.cos(x * DEG), tand = x => Math.tan(x * DEG);
+const logb = (b) => x => x > 0 ? Math.log(x) / Math.log(b) : NaN;
+const eq = s => `<span class="m">${s.replace(/\b([xyabcfghk])\b/g, '<i>$1</i>')}</span>`;
+const num = v => { v = Math.round(v * 1000) / 1000; if (Object.is(v, -0)) v = 0; return (v < 0 ? '−' : '') + Math.abs(v); };
+const fmtC = (x, y, deg) => `(${num(x)}${deg ? '°' : ''}, ${num(y)})`;
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const rng = (a, b, s = 1) => { const o = []; for (let v = a; v <= b + 1e-9; v += s) o.push(Math.round(v * 1000) / 1000); return o; };
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- graph renderer ---------- */
+function tokens() {
+  const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue('--' + n).trim();
+  return { sheet: g('sheet'), grid: g('grid'), gridStrong: g('grid-strong'), ink: g('ink'), muted: g('muted'), ghost: g('ghost'),
+    c1: g('c1'), c2: g('c2'), c3: g('c3'), c4: g('c4'), good: g('good'), bad: g('bad'), fMono: g('f-mono'), fMath: g('f-math') };
+}
+function each(step, [a, b], cb) { if (!step) return; for (let i = Math.ceil(a / step - 1e-9); i * step <= b + 1e-9; i++) cb(Math.round(i * step * 1e6) / 1e6); }
+
+function drawGraph(cv, win, L = {}, zk = 'c1') {
+  const cssW = cv.clientWidth; if (!cssW) return;
+  const asp = L.aspect || win.aspect || .8, cssH = Math.round(cssW * asp);
+  if (cv.style.height !== cssH + 'px') cv.style.height = cssH + 'px';
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5), pw = Math.round(cssW * dpr), ph = Math.round(cssH * dpr);
+  if (cv.width !== pw || cv.height !== ph) { cv.width = pw; cv.height = ph; }
+  const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const T = tokens(), Z = T[zk] || T.c1;
+  const W = cssW, H = cssH, [x0, x1] = win.x, [y0, y1] = win.y;
+  const X = x => (x - x0) / (x1 - x0) * W, Y = y => (y1 - y) / (y1 - y0) * H;
+  const small = W < 260;
+  c.clearRect(0, 0, W, H); c.fillStyle = T.sheet; c.fillRect(0, 0, W, H);
+  // grid
+  c.lineWidth = 1; c.strokeStyle = T.grid; c.beginPath();
+  each(win.gx, win.x, x => { const p = Math.round(X(x)) + .5; c.moveTo(p, 0); c.lineTo(p, H); });
+  each(win.gy, win.y, y => { const p = Math.round(Y(y)) + .5; c.moveTo(0, p); c.lineTo(W, p); });
+  c.stroke();
+  c.strokeStyle = T.gridStrong; c.beginPath();
+  each(win.lx, win.x, x => { const p = Math.round(X(x)) + .5; c.moveTo(p, 0); c.lineTo(p, H); });
+  each(win.ly, win.y, y => { const p = Math.round(Y(y)) + .5; c.moveTo(0, p); c.lineTo(W, p); });
+  c.stroke();
+  // axes
+  const hasX = y0 <= 0 && 0 <= y1, hasY = x0 <= 0 && 0 <= x1;
+  const aY = hasX ? Y(0) : H, aX = hasY ? X(0) : 0;
+  c.strokeStyle = T.ink; c.fillStyle = T.ink; c.lineWidth = 1.6; c.beginPath();
+  if (hasX) { c.moveTo(0, aY); c.lineTo(W, aY); }
+  if (hasY) { c.moveTo(aX, 0); c.lineTo(aX, H); }
+  c.stroke();
+  if (hasX) { c.beginPath(); c.moveTo(W, aY); c.lineTo(W - 8, aY - 4); c.lineTo(W - 8, aY + 4); c.fill(); }
+  if (hasY) { c.beginPath(); c.moveTo(aX, 0); c.lineTo(aX - 4, 8); c.lineTo(aX + 4, 8); c.fill(); }
+  c.font = `italic ${small ? 13 : 16}px ${T.fMath}`; c.textAlign = 'left'; c.textBaseline = 'alphabetic';
+  if (hasX) c.fillText('x', W - 12, aY - 7);
+  if (hasY) c.fillText('y', aX + 7, 13);
+  // labels
+  const halo = (t, x, y) => { c.lineWidth = 3; c.strokeStyle = T.sheet; c.strokeText(t, x, y); c.fillText(t, x, y); };
+  c.font = `${small ? 9 : 11}px ${T.fMono}`; c.fillStyle = T.muted;
+  if (win.lx) {
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    const ly = hasX ? Math.min(aY + 4, H - 14) : H - 14;
+    each(win.lx, win.x, x => { if (Math.abs(x) < 1e-9 && hasY) return; const p = X(x); if (p < 12 || p > W - 14) return; halo(num(x) + (win.deg ? '°' : ''), p, ly); });
+  }
+  if (win.ly) {
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    const lx = hasY ? Math.max(aX - 5, small ? 22 : 30) : (small ? 24 : 32);
+    each(win.ly, win.y, y => { if (Math.abs(y) < 1e-9) return; const p = Y(y); if (p < 10 || p > H - 10) return; halo(num(y), lx, p); });
+  }
+  if (hasX && hasY && win.lx) { c.textAlign = 'right'; c.textBaseline = 'top'; halo('O', aX - 4, aY + 3); }
+  // curves
+  for (const cu of (L.curves || [])) {
+    const col = cu.col === 'ghost' ? T.ghost : cu.col ? (T[cu.col] || cu.col) : Z;
+    if (cu.asym) {
+      c.save(); c.setLineDash([4, 5]); c.strokeStyle = T.muted; c.lineWidth = 1.2; c.beginPath();
+      cu.asym.forEach(a => { if (a < x0 || a > x1) return; const p = X(a); c.moveTo(p, 0); c.lineTo(p, H); }); c.stroke(); c.restore();
+    }
+    c.save(); c.strokeStyle = col; c.lineWidth = cu.w || (small ? 2.4 : 3.2); c.lineJoin = 'round'; c.lineCap = 'round';
+    c.setLineDash(cu.dash ? [8, 7] : []);
+    c.beginPath(); c.rect(0, 0, W, H); c.clip();
+    c.beginPath();
+    if (cu.vx !== undefined) { const p = X(cu.vx); c.moveTo(p, 0); c.lineTo(p, H * (cu.prog ?? 1)); }
+    else {
+      const a = Math.max(x0, cu.dom ? cu.dom[0] : -Infinity), b = Math.min(x1, cu.dom ? cu.dom[1] : Infinity);
+      const end = a + (b - a) * (cu.prog ?? 1), N = 900, span = y1 - y0;
+      let pen = false, py = null;
+      for (let i = 0; i <= N; i++) {
+        let x = a + (end - a) * i / N;
+        const y = cu.f(x);
+        if (!isFinite(y)) { pen = false; py = null; continue; }
+        if (py !== null && Math.abs(y - py) > span * 2) pen = false;
+        const yy = Math.max(y0 - span, Math.min(y1 + span, y));
+        if (!pen) { c.moveTo(X(x), Y(yy)); pen = true; } else c.lineTo(X(x), Y(yy));
+        py = y;
+      }
+    }
+    c.stroke(); c.restore();
+  }
+  // cursor
+  if (L.cursor) {
+    const { x, y } = L.cursor, px = X(x), py = Y(y);
+    c.save(); c.strokeStyle = Z; c.globalAlpha = .55; c.setLineDash([3, 4]); c.lineWidth = 1.3; c.beginPath();
+    c.moveTo(px, py); c.lineTo(px, aY); c.moveTo(px, py); c.lineTo(aX, py); c.stroke(); c.restore();
+    c.beginPath(); c.arc(px, py, 7, 0, 7); c.strokeStyle = Z; c.lineWidth = 2; c.stroke();
+    labelAt(c, T, fmtC(x, y, win.deg), px, py, W, H, T.ink);
+  }
+  // points
+  for (const p of (L.points || [])) {
+    const px = X(p.x), py = Y(p.y);
+    if (p.kind === 'miss') {
+      c.strokeStyle = T.bad; c.lineWidth = 3; c.beginPath();
+      c.moveTo(px - 6, py - 6); c.lineTo(px + 6, py + 6); c.moveTo(px + 6, py - 6); c.lineTo(px - 6, py + 6); c.stroke();
+    } else {
+      c.beginPath(); c.arc(px, py, small ? 4.5 : 6.5, 0, 7);
+      c.fillStyle = p.col ? (T[p.col] || p.col) : Z; c.fill(); c.lineWidth = 2.5; c.strokeStyle = T.sheet; c.stroke();
+      c.beginPath(); c.arc(px, py, small ? 6 : 8, 0, 7); c.lineWidth = 1.4; c.strokeStyle = T.ink; c.stroke();
+    }
+    const t = p.label === true ? fmtC(p.x, p.y, win.deg) : p.label;
+    if (t) labelAt(c, T, t, px, py, W, H, p.kind === 'miss' ? T.bad : T.ink, small);
+  }
+}
+function labelAt(c, T, t, px, py, W, H, col, small) {
+  c.font = `600 ${small ? 10 : 12}px ${T.fMono}`;
+  const w = c.measureText(t).width;
+  let tx = px + 11, ty = py - 11; c.textAlign = 'left'; c.textBaseline = 'bottom';
+  if (tx + w > W - 4) { tx = px - 11; c.textAlign = 'right'; }
+  if (ty - 14 < 0) { ty = py + 12; c.textBaseline = 'top'; }
+  c.lineWidth = 4; c.strokeStyle = T.sheet; c.strokeText(t, tx, ty); c.fillStyle = col; c.fillText(t, tx, ty);
+}
+
+let draws = [];
+const reg = fn => { draws.push(fn); fn(); };
+const redrawAll = () => draws.forEach(f => { try { f(); } catch (e) { console.error(e); } });
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(redrawAll, 60); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', redrawAll);
+new MutationObserver(redrawAll).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawAll);
+
+/* ---------- windows ---------- */
+const W = {
+  line: { x: [-6, 6], y: [-4.5, 4.5], gx: 1, gy: 1, lx: 2, ly: 2, aspect: .75 },
+  line6: { x: [-6, 6], y: [-6, 6], gx: 1, gy: 1, lx: 2, ly: 2, aspect: 1 },
+  para: { x: [-7, 7], y: [-7, 7], gx: 1, gy: 1, lx: 2, ly: 2, aspect: 1 },
+  trigW: { x: [-390, 390], y: [-1.7, 1.7], gx: 45, gy: .5, lx: 180, ly: 1, deg: 1, aspect: .62 },
+  trig0: { x: [-45, 405], y: [-1.6, 1.6], gx: 45, gy: .5, lx: 90, ly: 1, deg: 1, aspect: .6 },
+  tan: { x: [-390, 390], y: [-4, 4], gx: 45, gy: 1, lx: 90, ly: 2, deg: 1, aspect: .62 },
+  note: { x: [-4, 4], y: [-3, 3], gx: 1, gy: 1, aspect: .75 }
+};
+
+/* ---------- content ---------- */
+const ZONES = [
+{
+  id: 'lines', name: 'Straight Lines', sub: 'Constant and linear functions', col: 'c1',
+  icon: { win: { x: [-5, 5], y: [-3, 3], gx: 1, gy: 1, aspect: .5 }, curves: [{ f: x => 2 }, { f: x => .6 * x - .5, col: 'ghost', w: 2.4 }] },
+  notes: [
+    { h: 'Constant function', body: `Form: ${eq('y = c')} or ${eq('f(x) = c')}, where ${eq('c')} is a constant. Its domain may be all real numbers. The graph is a <b>horizontal line</b> with <b>y-intercept ${eq('c')}</b>. However ${eq('x')} changes, ${eq('y')} stays the same.`,
+      figs: [{ cap: 'c > 0: above the x-axis', curves: [{ f: x => 2 }] }, { cap: 'c < 0: below the x-axis', curves: [{ f: x => -2 }] }],
+      foot: `When ${eq('c = 0')}, the graph of ${eq('y = c')} lies on the x-axis.` },
+    { h: 'Linear function', body: `Form: ${eq('y = ax + b')} or ${eq('f(x) = ax + b')}, where ${eq('a')} and ${eq('b')} are constants and ${eq('a ≠ 0')}. The graph is a <b>straight line</b> with <b>slope ${eq('a')}</b> and <b>y-intercept ${eq('b')}</b>.`,
+      figs: [{ cap: 'a > 0: rises left to right', curves: [{ f: x => x + 1 }] }, { cap: 'a < 0: falls left to right', curves: [{ f: x => -x + 1 }] }],
+      foot: `When ${eq('b = 0')}, the line ${eq('y = ax')} passes through the origin.` },
+    { h: 'How to sketch a line', body: `Find the <b>x-intercept</b> (put ${eq('y = 0')}) and the <b>y-intercept</b> (put ${eq('x = 0')}). Plot both points and join them with a ruler.` }
+  ],
+  rounds: [
+    { t: 'pick', q: 'Which graph shows', eq: 'y = −3', win: W.line, opts: [
+        { e: 'y = −3', ok: 1, curves: [{ f: x => -3 }] }, { e: 'y = 3', curves: [{ f: x => 3 }] },
+        { e: 'x = −3', curves: [{ vx: -3 }] }, { e: 'y = −3x', curves: [{ f: x => -3 * x }] }],
+      hint: `${eq('y = c')} is a horizontal line that cuts the y-axis at ${eq('c')}.`,
+      explain: `${eq('y = −3')} is a constant function. Its graph is a horizontal line with y-intercept −3. Since ${eq('c = −3 < 0')}, the line lies below the x-axis.` },
+    { t: 'quiz', q: `However ${eq('x')} changes, the value of ${eq('y')} stays the same. Which function behaves like this?`,
+      opts: [{ e: 'f(x) = −2', ok: 1 }, { e: 'f(x) = −2x' }, { e: 'f(x) = x − 2' }, { e: 'f(x) = x²' }],
+      reveal: { win: W.line, curves: [{ f: x => -2 }], points: [{ x: 0, y: -2, label: true }] },
+      hint: `Look for the function with no ${eq('x')} on the right-hand side.`,
+      explain: `${eq('f(x) = −2')} is a constant function: every ${eq('x')} gives ${eq('y = −2')}, so its graph is a horizontal line.` },
+    { t: 'plot', q: 'Plot both intercepts of the graph.', eq: 'f(x) = 5x + 30',
+      win: { x: [-10, 4], y: [-10, 40], gx: 1, gy: 5, lx: 2, ly: 10, aspect: .85 }, snap: [1, 5],
+      curve: { f: x => 5 * x + 30 },
+      targets: [{ x: -6, y: 0, n: 'x-intercept' }, { x: 0, y: 30, n: 'y-intercept' }],
+      hint: `x-intercept: put ${eq('y = 0')} and solve ${eq('5x + 30 = 0')}. y-intercept: put ${eq('x = 0')}.`,
+      explain: `Put ${eq('y = 0')}: ${eq('5x + 30 = 0')}, so ${eq('x = −6')}. Put ${eq('x = 0')}: ${eq('y = 30')}. Join (−6, 0) and (0, 30). Slope 5 > 0, so the line rises.` },
+    { t: 'shape', kind: 'lin', q: 'Move the sliders until your line sits on the dashed target.',
+      win: W.line6, params: [{ k: 'a', vals: [-4, -3, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 3, 4], start: 1 }, { k: 'b', vals: rng(-6, 6), start: 0 }],
+      target: { a: -2, b: 3 },
+      hint: `The target cuts the y-axis at 3, so ${eq('b = 3')}. It drops 2 units for every 1 unit to the right, so ${eq('a = −2')}.`,
+      explain: `${eq('y = −2x + 3')}: slope ${eq('a = −2')} is negative, so the line falls; y-intercept ${eq('b = 3')}.` },
+    { t: 'plot', q: 'Plot both intercepts of the graph.', eq: 'y = <sup>3</sup>⁄<sub>5</sub>x − 21',
+      win: { x: [-10, 45], y: [-27, 9], gx: 5, gy: 3, lx: 10, ly: 9, aspect: .7 }, snap: [5, 3],
+      curve: { f: x => .6 * x - 21 },
+      targets: [{ x: 35, y: 0, n: 'x-intercept' }, { x: 0, y: -21, n: 'y-intercept' }],
+      hint: `Put ${eq('x = 0')} for the y-intercept. Put ${eq('y = 0')}: ${eq('<sup>3</sup>⁄<sub>5</sub>x = 21')}, so multiply 21 by <sup>5</sup>⁄<sub>3</sub>.`,
+      explain: `Put ${eq('x = 0')}: ${eq('y = −21')}. Put ${eq('y = 0')}: ${eq('<sup>3</sup>⁄<sub>5</sub>x = 21')}, so ${eq('x = 35')}. The slope <sup>3</sup>⁄<sub>5</sub> is positive, so the line rises.` },
+    { t: 'which', q: 'Which equation matches this line?', win: W.line6, curves: [{ f: x => -2 * x + 4 }], points: [{ x: 0, y: 4, label: true }, { x: 2, y: 0, label: true }],
+      opts: [{ e: 'y = −2x + 4', ok: 1 }, { e: 'y = 2x + 4' }, { e: 'y = −2x − 4' }, { e: 'y = 4x − 2' }],
+      hint: 'Read the y-intercept first. Then decide: does the line rise or fall?',
+      explain: `It cuts the y-axis at 4, so ${eq('b = 4')}. It falls, so ${eq('a < 0')}: from (0, 4) to (2, 0) it drops 4 over a run of 2, so ${eq('a = −2')}.` },
+    { t: 'quiz', q: `The graph of ${eq('y = ax')} (that is, ${eq('b = 0')}) always passes through which point?`,
+      opts: [{ h: 'the origin (0, 0)', ok: 1 }, { h: '(1, 0)' }, { h: '(0, 1)' }, { h: `(${eq('a')}, 0)` }],
+      reveal: { win: W.line, curves: [{ f: x => 2 * x }, { f: x => .5 * x, col: 'c2' }, { f: x => -x, col: 'c4' }], points: [{ x: 0, y: 0, col: 'ink' }] },
+      hint: `What is ${eq('y')} when ${eq('x = 0')}?`,
+      explain: `When ${eq('b = 0')} the y-intercept is 0, so every line ${eq('y = ax')} passes through the origin. Only the steepness changes.` },
+    { t: 'pick', q: 'Which graph shows', eq: 'y = 0.5x − 2', win: W.line, opts: [
+        { e: 'y = 0.5x − 2', ok: 1, curves: [{ f: x => .5 * x - 2 }] }, { e: 'y = 0.5x + 2', curves: [{ f: x => .5 * x + 2 }] },
+        { e: 'y = −0.5x − 2', curves: [{ f: x => -.5 * x - 2 }] }, { e: 'y = 2x − 2', curves: [{ f: x => 2 * x - 2 }] }],
+      hint: 'Two checks: where does it cut the y-axis, and how steep is it?',
+      explain: `Slope 0.5 > 0, so it rises gently. y-intercept −2. Check: ${eq('y = 0')} gives ${eq('x = 4')}.` }
+  ]
+},
+{
+  id: 'para', name: 'Parabolas', sub: 'Quadratic functions', col: 'c2',
+  icon: { win: { x: [-5, 5], y: [-3, 3], gx: 1, gy: 1, aspect: .5 }, curves: [{ f: x => .35 * x * x - 2.5 }, { f: x => -.4 * (x - 1) ** 2 + 2.4, col: 'ghost', w: 2.4 }] },
+  notes: [
+    { h: 'Quadratic function', body: `Form: ${eq('y = ax² + bx + c')} or ${eq('y = a(x − h)² + k')}, where ${eq('a ≠ 0')}. Its domain may be all real numbers. The graph is a <b>parabola</b>.`,
+      figs: [{ cap: 'a > 0: opens upward, vertex is the lowest point', curves: [{ f: x => .6 * x * x - 2 }, { vx: 0, col: 'ghost', dash: 1, w: 1.5 }], points: [{ x: 0, y: -2, label: 'vertex' }] },
+             { cap: 'a < 0: opens downward, vertex is the highest point', curves: [{ f: x => -.6 * x * x + 2 }, { vx: 0, col: 'ghost', dash: 1, w: 1.5 }], points: [{ x: 0, y: 2, label: 'vertex' }] }] },
+    { h: 'Vertex and axis of symmetry', body: `For ${eq('y = a(x − h)² + k')}: the <b>vertex</b> is ${eq('(h, k)')} and the <b>axis of symmetry</b> is ${eq('x = h')}. Watch the sign: ${eq('(x + 3)²')} means ${eq('h = −3')}.`,
+      foot: `Completing the square on ${eq('y = ax² + bx + c')} gives ${eq('h = −<sup>b</sup>⁄<sub>2a</sub>')} and ${eq('k = <sup>4ac − b²</sup>⁄<sub>4a</sub>')}.` },
+    { h: 'How to sketch a parabola', body: `1. Find the vertex and the axis of symmetry. 2. Find the x-intercepts (put ${eq('y = 0')}); there may be two, one or none. 3. Find the y-intercept (put ${eq('x = 0')}). 4. Draw a smooth, symmetric curve through them.` }
+  ],
+  rounds: [
+    { t: 'shape', kind: 'quad', q: 'Move the sliders until your parabola sits on the dashed target.', win: W.para,
+      params: [{ k: 'a', vals: [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3], start: 1 }, { k: 'h', vals: rng(-5, 5), start: 0 }, { k: 'k', vals: rng(-6, 6), start: 0 }],
+      target: { a: -1, h: 2, k: 4 },
+      hint: `The target opens downward, so ${eq('a < 0')}. Its highest point is (2, 4), so ${eq('h = 2')} and ${eq('k = 4')}.`,
+      explain: `${eq('y = −(x − 2)² + 4')}. ${eq('a = −1 < 0')}, so it opens downward. Vertex (2, 4), axis of symmetry ${eq('x = 2')}, maximum value 4.` },
+    { t: 'plot', q: 'Plot the vertex and both x-intercepts.', eq: 'y = 25 − (x + 10)²',
+      win: { x: [-18, 2], y: [-10, 30], gx: 1, gy: 5, lx: 2, ly: 10, aspect: .85 }, snap: [1, 5],
+      curve: { f: x => 25 - (x + 10) ** 2 },
+      targets: [{ x: -10, y: 25, n: 'vertex' }, { x: -15, y: 0, n: 'x-intercept' }, { x: -5, y: 0, n: 'x-intercept' }],
+      hint: `Rewrite as ${eq('y = −(x + 10)² + 25')}, so ${eq('h = −10')} and ${eq('k = 25')}. For x-intercepts solve ${eq('(x + 10)² = 25')}.`,
+      explain: `${eq('y = −(x + 10)² + 25')}: vertex (−10, 25), axis of symmetry ${eq('x = −10')}, opens downward since ${eq('a = −1')}. ${eq('(x + 10)² = 25')} gives ${eq('x + 10 = ±5')}, so ${eq('x = −15')} or ${eq('−5')}. The y-intercept is 25 − 100 = −75 (below this grid).` },
+    { t: 'plot', q: 'Plot the vertex and both x-intercepts.', eq: 'y = 2(x − 12)² − 8',
+      win: { x: [5, 19], y: [-10, 10], gx: 1, gy: 1, lx: 2, ly: 2, aspect: .9 }, snap: [1, 1],
+      curve: { f: x => 2 * (x - 12) ** 2 - 8 },
+      targets: [{ x: 12, y: -8, n: 'vertex' }, { x: 10, y: 0, n: 'x-intercept' }, { x: 14, y: 0, n: 'x-intercept' }],
+      hint: `In ${eq('y = a(x − h)² + k')} the vertex is ${eq('(h, k)')}. For x-intercepts solve ${eq('2(x − 12)² = 8')}.`,
+      explain: `Vertex (12, −8), axis of symmetry ${eq('x = 12')}. ${eq('a = 2 > 0')}, so it opens upward and −8 is the minimum value. ${eq('(x − 12)² = 4')} gives ${eq('x = 10')} or ${eq('14')}.` },
+    { t: 'quiz', q: `What is the y-intercept of the graph of ${eq('y = 2(x − 12)² − 8')}?`,
+      opts: [{ h: '280', ok: 1 }, { h: '−8' }, { h: '288' }, { h: '136' }],
+      hint: `Put ${eq('x = 0')}. Square first, then multiply by 2.`,
+      explain: `Put ${eq('x = 0')}: ${eq('y = 2(0 − 12)² − 8 = 2(144) − 8 = 280')}.` },
+    { t: 'quiz', q: `Complete the square. ${eq('y = x² + 10x + 52')} is the same as…`,
+      opts: [{ e: 'y = (x + 5)² + 27', ok: 1 }, { e: 'y = (x − 5)² + 27' }, { e: 'y = (x + 5)² + 52' }, { e: 'y = (x + 10)² − 48' }],
+      hint: 'Half of 10 is 5, and 5² = 25. What is 52 − 25?',
+      explain: `${eq('x² + 10x + 52 = (x² + 10x + 25) + 27 = (x + 5)² + 27')}. So the vertex is (−5, 27) and the axis of symmetry is ${eq('x = −5')}. Formula check: ${eq('h = −<sup>b</sup>⁄<sub>2a</sub> = −<sup>10</sup>⁄<sub>2</sub> = −5')}.` },
+    { t: 'quiz', q: `So how many x-intercepts does the graph of ${eq('y = x² + 10x + 52')} have?`,
+      opts: [{ h: 'None', ok: 1 }, { h: 'One' }, { h: 'Two' }, { h: 'Not enough information' }],
+      reveal: { win: { x: [-14, 4], y: [-10, 80], gx: 1, gy: 5, lx: 2, ly: 20, aspect: .8 }, curves: [{ f: x => (x + 5) ** 2 + 27 }, { vx: -5, col: 'ghost', dash: 1, w: 1.5 }], points: [{ x: -5, y: 27, label: true }, { x: 0, y: 52, label: true }] },
+      hint: 'Use the vertex from the last round. Which way does the parabola open?',
+      explain: `The vertex (−5, 27) is above the x-axis and ${eq('a = 1 > 0')}, so the parabola opens upward and never meets the x-axis. No x-intercepts. The y-intercept is 52.` },
+    { t: 'pick', q: 'Which graph shows', eq: 'y = 9 − (x − 2)²', win: { x: [-6, 6], y: [-10, 10], gx: 1, gy: 2, lx: 2, ly: 4, aspect: .85 }, opts: [
+        { e: 'y = 9 − (x − 2)²', ok: 1, curves: [{ f: x => 9 - (x - 2) ** 2 }] }, { e: 'y = (x − 2)² + 9', curves: [{ f: x => (x - 2) ** 2 + 9 }] },
+        { e: 'y = 9 − (x + 2)²', curves: [{ f: x => 9 - (x + 2) ** 2 }] }, { e: 'y = (x − 2)² − 9', curves: [{ f: x => (x - 2) ** 2 - 9 }] }],
+      hint: `Rewrite it as ${eq('y = −(x − 2)² + 9')}. Which way does it open, and where is the vertex?`,
+      explain: `${eq('y = −(x − 2)² + 9')}: ${eq('a = −1 < 0')}, so it opens downward with highest point (vertex) (2, 9).` },
+    { t: 'quiz', q: `Try more: ${eq('g(x) = x² − hx + h')}, where ${eq('h')} is a positive constant. What is the axis of symmetry?`,
+      opts: [{ e: 'x = <sup>h</sup>⁄<sub>2</sub>', ok: 1 }, { e: 'x = −<sup>h</sup>⁄<sub>2</sub>' }, { e: 'x = h' }, { e: 'x = −h' }],
+      hint: `Axis of symmetry: ${eq('x = −<sup>b</sup>⁄<sub>2a</sub>')}. Here ${eq('a = 1')} and ${eq('b = −h')}.`,
+      explain: `${eq('x = −<sup>b</sup>⁄<sub>2a</sub> = −<sup>(−h)</sup>⁄<sub>2(1)</sub> = <sup>h</sup>⁄<sub>2</sub>')}.` },
+    { t: 'quiz', q: `The vertex of ${eq('y = g(x)')} lies on the line ${eq('y = x')}. Which value of ${eq('h')} works?`,
+      opts: [{ e: 'h = 2', ok: 1 }, { e: 'h = 1' }, { e: 'h = 4' }, { e: 'h = 0.5' }],
+      reveal: { win: { x: [-3, 4], y: [-1, 5], gx: 1, gy: 1, lx: 1, ly: 1, aspect: .85 }, curves: [{ f: x => x, col: 'ghost', dash: 1, w: 2 }, { f: x => x * x - 2 * x + 2 }], points: [{ x: 1, y: 1, label: 'vertex (1, 1)' }] },
+      hint: `The vertex is at ${eq('x = <sup>h</sup>⁄<sub>2</sub>')}. Find ${eq('g(<sup>h</sup>⁄<sub>2</sub>)')} and set it equal to ${eq('<sup>h</sup>⁄<sub>2</sub>')}.`,
+      explain: `${eq('g(<sup>h</sup>⁄<sub>2</sub>) = h − <sup>h²</sup>⁄<sub>4</sub>')}. Setting this equal to ${eq('<sup>h</sup>⁄<sub>2</sub>')} gives ${eq('<sup>h</sup>⁄<sub>2</sub> = <sup>h²</sup>⁄<sub>4</sub>')}, so ${eq('h = 2')} (since ${eq('h > 0')}). Then ${eq('g(x) = x² − 2x + 2 = (x − 1)² + 1')} with vertex (1, 1).` }
+  ]
+},
+{
+  id: 'trig', name: 'Trig Waves', sub: 'sin x, cos x and tan x', col: 'c3',
+  icon: { win: { x: [-360, 360], y: [-1.6, 1.6], gx: 45, gy: .5, deg: 1, aspect: .5 }, curves: [{ f: sind }, { f: cosd, col: 'ghost', w: 2.4 }] },
+  notes: [
+    { h: 'Three graphs to know', body: `Angles are in degrees. Each graph repeats itself; the length of one repeat is the <b>period</b>.`,
+      figs: [{ cap: 'y = sin x', win: W.trig0, curves: [{ f: sind }] }, { cap: 'y = cos x', win: W.trig0, curves: [{ f: cosd }] }, { cap: 'y = tan x', win: { ...W.trig0, y: [-3, 3], gy: 1, ly: 2 }, curves: [{ f: tand, asym: [90, 270] }] }],
+      table: true },
+    { h: 'Shifts and flips', body: `Adding a constant moves the graph up or down, which changes the maximum and minimum values. Replacing ${eq('x')} by ${eq('−x')} flips the graph in the y-axis. Neither changes the period.` }
+  ],
+  rounds: [
+    { t: 'pick', q: 'Which graph shows', eq: 'y = cos x', win: W.trigW, opts: [
+        { e: 'y = cos x', ok: 1, curves: [{ f: cosd }] }, { e: 'y = sin x', curves: [{ f: sind }] },
+        { e: 'y = tan x', curves: [{ f: tand, asym: [-270, -90, 90, 270] }] }, { e: 'y = −cos x', curves: [{ f: x => -cosd(x) }] }],
+      hint: `What is cos 0°? The graph of ${eq('y = cos x')} crosses the y-axis at its maximum.`,
+      explain: `${eq('y = cos x')} has maximum 1 at 0°, minimum −1 at 180°, and x-intercepts at 90° and 270°. Period 360°.` },
+    { t: 'plot', q: 'Plot the maximum point, the minimum point and all three x-intercepts.', eq: 'y = sin x, 0° ≤ x ≤ 360°',
+      win: W.trig0, snap: [45, .5], curve: { f: sind, dom: [0, 360] },
+      targets: [{ x: 90, y: 1, n: 'maximum point' }, { x: 270, y: -1, n: 'minimum point' }, { x: 0, y: 0, n: 'x-intercept' }, { x: 180, y: 0, n: 'x-intercept' }, { x: 360, y: 0, n: 'x-intercept' }],
+      hint: 'sin 90° = 1 and sin 270° = −1. sin x = 0 when x = 0°, 180° and 360°.',
+      explain: `${eq('y = sin x')}: maximum value 1 at (90°, 1), minimum value −1 at (270°, −1), x-intercepts 0°, 180°, 360°. The shape repeats every 360°, so the period is 360°.` },
+    { t: 'quiz', q: `What is the period of ${eq('y = tan x')}?`, graph: { win: W.tan, curves: [{ f: tand, asym: [-270, -90, 90, 270] }] },
+      opts: [{ h: '180°', ok: 1 }, { h: '360°' }, { h: '90°' }, { h: '720°' }],
+      hint: 'Measure the horizontal distance between two neighbouring branches.',
+      explain: `tan x repeats every 180°, so its period is 180°, half the period of sin x and cos x.` },
+    { t: 'plot', q: 'Plot both x-intercepts and the minimum point.', eq: 'y = cos x, 0° ≤ x ≤ 360°',
+      win: W.trig0, snap: [45, .5], curve: { f: cosd, dom: [0, 360] },
+      targets: [{ x: 90, y: 0, n: 'x-intercept' }, { x: 270, y: 0, n: 'x-intercept' }, { x: 180, y: -1, n: 'minimum point' }],
+      hint: 'cos 0° = 1 and cos 180° = −1. Where does it cross zero in between?',
+      explain: `cos x = 0 at 90° and 270°. Minimum value −1 at 180°, maximum value 1 at 0° and 360°.` },
+    { t: 'quiz', q: `For which values of ${eq('x')} is ${eq('tan x')} undefined?`,
+      opts: [{ h: '±90°, ±270°, …', ok: 1 }, { h: '0°, ±180°, ±360°, …' }, { h: '±45°, ±135°, …' }, { h: 'It is defined for every x' }],
+      reveal: { win: W.tan, curves: [{ f: tand, asym: [-270, -90, 90, 270] }] },
+      hint: 'tan x = sin x ÷ cos x. When is cos x zero?',
+      explain: `tan x is undefined at ±90°, ±270°, … (the dashed lines). So the domain is all real numbers except those values, and tan x has no maximum or minimum value.` },
+    { t: 'quiz', q: `${eq('y = 1 + sin(−x)')} for −360° ≤ ${eq('x')} ≤ 360°. What are its maximum and minimum values?`,
+      opts: [{ h: 'max 2, min 0', ok: 1 }, { h: 'max 1, min −1' }, { h: 'max 2, min −1' }, { h: 'max 1, min 0' }],
+      reveal: { win: { x: [-400, 400], y: [-1.5, 2.5], gx: 45, gy: .5, lx: 180, ly: 1, deg: 1, aspect: .6 }, curves: [{ f: sind, col: 'ghost', w: 2, dom: [-360, 360] }, { f: x => 1 + sind(-x), dom: [-360, 360] }] },
+      hint: 'sin of any angle stays between −1 and 1. Then add 1.',
+      explain: `sin(−x) still ranges from −1 to 1. Adding 1 lifts the graph by 1 unit, so max = 1 + 1 = 2 and min = 1 + (−1) = 0. The faded curve is ${eq('y = sin x')} for comparison.` },
+    { t: 'quiz', q: `And what is the period of ${eq('y = 1 + sin(−x)')}?`,
+      opts: [{ h: '360°', ok: 1 }, { h: '180°' }, { h: '720°' }, { h: '90°' }],
+      reveal: { win: { x: [-400, 400], y: [-1.5, 2.5], gx: 45, gy: .5, lx: 180, ly: 1, deg: 1, aspect: .6 }, curves: [{ f: x => 1 + sind(-x), dom: [-360, 360] }] },
+      hint: 'Flipping and shifting up do not stretch the graph sideways.',
+      explain: `Flipping (${eq('x')} → ${eq('−x')}) and shifting up by 1 do not stretch the graph sideways, so the period stays 360°. The domain is −360° ≤ ${eq('x')} ≤ 360°.` },
+    { t: 'which', q: 'Which function has this graph?', win: W.trigW, curves: [{ f: sind }],
+      opts: [{ e: 'y = sin x', ok: 1 }, { e: 'y = cos x' }, { e: 'y = 1 + sin x' }, { e: 'y = tan x' }],
+      hint: 'Where does it cross the y-axis? Where is its first peak?',
+      explain: `It passes through the origin, peaks at (90°, 1) and has no breaks: that is ${eq('y = sin x')}.` }
+  ]
+},
+{
+  id: 'explog', name: 'Exp & Log', sub: 'Exponential and logarithmic functions', col: 'c4',
+  icon: { win: { x: [-3, 5], y: [-2, 3], gx: 1, gy: 1, aspect: .5 }, curves: [{ f: x => 2 ** x }, { f: logb(2), col: 'ghost', w: 2.4, dom: [1e-4, 5] }] },
+  notes: [
+    { h: 'Exponential function', body: `Form: ${eq('y = a<sup>x</sup>')} where ${eq('a > 0')} and ${eq('a ≠ 1')}. Its domain may be all real numbers. The graph cuts the y-axis at <b>(0, 1)</b>, has <b>no x-intercepts</b> and lies above the x-axis, and has no maximum or minimum point.`,
+      figs: [{ cap: 'a > 1: rises', win: { x: [-3, 3], y: [-1, 4], gx: 1, gy: 1, aspect: .83 }, curves: [{ f: x => 2 ** x }], points: [{ x: 0, y: 1, label: '(0, 1)' }] },
+             { cap: '0 < a < 1: falls', win: { x: [-3, 3], y: [-1, 4], gx: 1, gy: 1, aspect: .83 }, curves: [{ f: x => .5 ** x }], points: [{ x: 0, y: 1, label: '(0, 1)' }] }],
+      foot: `${eq('y = a<sup>x</sup>')} and ${eq('y = (<sup>1</sup>⁄<sub>a</sub>)<sup>x</sup>')} are symmetric about the <b>y-axis</b>.` },
+    { h: 'Logarithmic function', body: `Form: ${eq('y = log<sub>a</sub> x')} where ${eq('a > 0')} and ${eq('a ≠ 1')}. Its domain is all <b>positive</b> real numbers. The graph cuts the x-axis at <b>(1, 0)</b>, has <b>no y-intercept</b> and lies to the right of the y-axis, and has no maximum or minimum point.`,
+      figs: [{ cap: 'a > 1: rises', win: { x: [-1, 5], y: [-2.5, 2.5], gx: 1, gy: 1, aspect: .83 }, curves: [{ f: logb(2), dom: [1e-4, 6] }], points: [{ x: 1, y: 0, label: '(1, 0)' }] },
+             { cap: '0 < a < 1: falls', win: { x: [-1, 5], y: [-2.5, 2.5], gx: 1, gy: 1, aspect: .83 }, curves: [{ f: logb(.5), dom: [1e-4, 6] }], points: [{ x: 1, y: 0, label: '(1, 0)' }] }],
+      foot: `${eq('y = log<sub>a</sub> x')} and ${eq('y = log<sub>1/a</sub> x')} are symmetric about the <b>x-axis</b>.` },
+    { h: 'Exponential meets log', body: `${eq('y = a<sup>x</sup>')} and ${eq('y = log<sub>a</sub> x')} are symmetric about the line <b>${eq('y = x')}</b>. Swap the coordinates of any point on one graph to get a point on the other.`,
+      figs: [{ cap: 'y = 2ˣ, y = log₂ x and the mirror y = x', win: { x: [-3, 5], y: [-3, 5], gx: 1, gy: 1, aspect: 1 }, curves: [{ f: x => x, col: 'ghost', dash: 1, w: 2 }, { f: x => 2 ** x }, { f: logb(2), dom: [1e-4, 6], col: 'c1' }] }] }
+  ],
+  rounds: [
+    { t: 'shape', kind: 'exp', q: 'Slide the base until your curve sits on the dashed target.', win: { x: [-4, 4], y: [-2, 6], gx: 1, gy: 1, lx: 1, ly: 1, aspect: 1 },
+      params: [{ k: 'a', vals: [0.2, 0.25, 0.5, 1, 2, 4, 5], start: 2 }], target: { a: .5 },
+      hint: `The target falls from left to right, so ${eq('0 < a < 1')}. It passes through (−1, 2), so ${eq('a<sup>−1</sup> = 2')}.`,
+      explain: `${eq('y = 0.5<sup>x</sup>')}. Every curve ${eq('y = a<sup>x</sup>')} passes through (0, 1). If ${eq('a > 1')} it rises; if ${eq('0 < a < 1')} it falls. ${eq('a = 1')} is not allowed because it gives the constant ${eq('y = 1')}.` },
+    { t: 'pick', q: 'Which graph shows', eq: 'y = (<sup>1</sup>⁄<sub>10</sub>)<sup>x</sup>', win: { x: [-3, 3], y: [-2, 4], gx: 1, gy: 1, lx: 1, ly: 1, aspect: 1 }, opts: [
+        { e: 'y = (<sup>1</sup>⁄<sub>10</sub>)<sup>x</sup>', ok: 1, curves: [{ f: x => .1 ** x }] }, { e: 'y = 10<sup>x</sup>', curves: [{ f: x => 10 ** x }] },
+        { e: 'y = log x', curves: [{ f: logb(10), dom: [1e-5, 3] }] }, { e: 'y = log<sub>1/10</sub> x', curves: [{ f: logb(.1), dom: [1e-5, 3] }] }],
+      hint: `Every ${eq('y = a<sup>x</sup>')} passes through (0, 1). Is <sup>1</sup>⁄<sub>10</sub> bigger or smaller than 1?`,
+      explain: `The base <sup>1</sup>⁄<sub>10</sub> is between 0 and 1, so the curve falls from left to right. It cuts the y-axis at (0, 1), stays above the x-axis and has no x-intercepts.` },
+    { t: 'plot', q: 'Plot the y-intercept and the points where x = 1 and x = 3.', eq: 'y = 2<sup>x</sup>',
+      win: { x: [-4, 5], y: [-1, 9], gx: 1, gy: 1, lx: 1, ly: 1, aspect: 1 }, snap: [1, 1], curve: { f: x => 2 ** x },
+      targets: [{ x: 0, y: 1, n: 'y-intercept' }, { x: 1, y: 2, n: 'point at x = 1' }, { x: 3, y: 8, n: 'point at x = 3' }],
+      hint: '2⁰ = 1, 2¹ = 2 and 2³ = 8.',
+      explain: `${eq('y = 2<sup>x</sup>')} cuts the y-axis at (0, 1), climbs steeply to the right, and on the left it flattens toward the x-axis without touching it. Remember these three points for the next round.` },
+    { t: 'plot', q: 'Plot the x-intercept and the points where x = 2 and x = 8.', eq: 'y = log<sub>2</sub> x',
+      win: { x: [-1, 9], y: [-4, 4], gx: 1, gy: 1, lx: 1, ly: 1, aspect: .8 }, snap: [1, 1], curve: { f: logb(2), dom: [1e-4, 9] },
+      extras: [{ f: x => x, col: 'ghost', dash: 1, w: 2 }, { f: x => 2 ** x, col: 'ghost', w: 2.2 }],
+      targets: [{ x: 1, y: 0, n: 'x-intercept' }, { x: 2, y: 1, n: 'point at x = 2' }, { x: 8, y: 3, n: 'point at x = 8' }],
+      hint: `${eq('log<sub>2</sub> x')} asks: 2 to what power gives ${eq('x')}? So ${eq('log<sub>2</sub> 8 = 3')}.`,
+      explain: `On ${eq('y = 2<sup>x</sup>')} you plotted (0, 1), (1, 2), (3, 8). Here you plotted (1, 0), (2, 1), (8, 3): the same points with ${eq('x')} and ${eq('y')} swapped. That swap is a reflection in ${eq('y = x')} (dashed), so the two graphs (faded and solid) are symmetric about ${eq('y = x')}.` },
+    { t: 'quiz', q: `What is the domain of ${eq('y = log<sub>7</sub> x')}?`,
+      opts: [{ h: 'all positive real numbers', ok: 1 }, { h: 'all real numbers' }, { h: `${eq('x ≥ 1')}` }, { h: 'all real numbers except 0' }],
+      reveal: { win: { x: [-2, 10], y: [-2.5, 2], gx: 1, gy: .5, lx: 2, ly: 1, aspect: .6 }, curves: [{ f: logb(7), dom: [1e-6, 10] }], points: [{ x: 1, y: 0, label: '(1, 0)' }, { x: 7, y: 1, label: '(7, 1)' }] },
+      hint: 'Can 7 raised to any power be zero or negative?',
+      explain: `You can only take the log of a positive number, so the domain is ${eq('x > 0')}. The graph lies to the right of the y-axis, cuts the x-axis at (1, 0) and has no y-intercept.` },
+    { t: 'quiz', q: `The graphs of ${eq('y = 5<sup>x</sup>')} and ${eq('y = 0.2<sup>x</sup>')} are symmetric about which line?`,
+      opts: [{ h: 'the y-axis', ok: 1 }, { h: 'the x-axis' }, { h: `the line ${eq('y = x')}` }, { h: `the line ${eq('y = 1')}` }],
+      reveal: { win: { x: [-3, 3], y: [-1, 6], gx: 1, gy: 1, lx: 1, ly: 1, aspect: .9 }, curves: [{ vx: 0, col: 'ghost', dash: 1, w: 2 }, { f: x => 5 ** x }, { f: x => .2 ** x, col: 'c1' }] },
+      hint: `0.2 = <sup>1</sup>⁄<sub>5</sub>. What does replacing ${eq('x')} by ${eq('−x')} do to a graph?`,
+      explain: `${eq('0.2<sup>x</sup> = (<sup>1</sup>⁄<sub>5</sub>)<sup>x</sup> = 5<sup>−x</sup>')}. Replacing ${eq('x')} by ${eq('−x')} reflects a graph in the y-axis. In general ${eq('y = a<sup>x</sup>')} and ${eq('y = (<sup>1</sup>⁄<sub>a</sub>)<sup>x</sup>')} are symmetric about the y-axis.` },
+    { t: 'quiz', q: `${eq('g(x) = 0.04<sup>x</sup>')}. The graphs of ${eq('y = g(x)')} and ${eq('y = h(x)')} are symmetric about the y-axis. What is ${eq('h(x)')}?`,
+      opts: [{ e: 'h(x) = 25<sup>x</sup>', ok: 1 }, { e: 'h(x) = 4<sup>x</sup>' }, { e: 'h(x) = −0.04<sup>x</sup>' }, { e: 'h(x) = log<sub>0.04</sub> x' }],
+      hint: `The y-axis mirror image of ${eq('a<sup>x</sup>')} is ${eq('(<sup>1</sup>⁄<sub>a</sub>)<sup>x</sup>')}. What is 1 ÷ 0.04?`,
+      explain: `${eq('h(x) = g(−x) = 0.04<sup>−x</sup> = (<sup>1</sup>⁄<sub>0.04</sub>)<sup>x</sup> = 25<sup>x</sup>')}.` },
+    { t: 'which', q: 'Which function has this graph?', win: { x: [-1, 8], y: [-4, 4], gx: 1, gy: 1, lx: 1, ly: 1, aspect: .8 }, curves: [{ f: logb(.5), dom: [1e-5, 8] }], points: [{ x: 1, y: 0, label: true }, { x: 2, y: -1, label: true }],
+      opts: [{ e: 'y = log<sub>0.5</sub> x', ok: 1 }, { e: 'y = log<sub>2</sub> x' }, { e: 'y = 0.5<sup>x</sup>' }, { e: 'y = 2<sup>x</sup>' }],
+      hint: 'Does it cross the y-axis or the x-axis? Then: does it rise or fall?',
+      explain: `It stays right of the y-axis and cuts the x-axis at (1, 0), so it is a logarithm. It falls, so the base is between 0 and 1: ${eq('y = log<sub>0.5</sub> x')}, the mirror image of ${eq('y = log<sub>2</sub> x')} in the x-axis.` }
+  ]
+}
+];
+const ZMAP = Object.fromEntries(ZONES.map(z => [z.id, z]));
+const KIND = { pick: 'Pick the graph', which: 'Name that graph', quiz: 'Quick check', plot: 'Plot the key points', shape: 'Tune the curve' };
+
+/* ---------- state ---------- */
+let S = null;
+let best = store.get('plottwist-best', {});
+let total = store.get('plottwist-total', 0);
+const scoreEl = $('#score'), screen = $('#screen');
+const setScore = () => { scoreEl.textContent = (S ? S.score : total).toLocaleString(); };
+setScore();
+
+/* sound */
+let actx = null, soundOn = store.get('plottwist-sound', true);
+const sbtn = $('#sound');
+const syncSound = () => { sbtn.textContent = soundOn ? 'Sound on' : 'Sound off'; sbtn.setAttribute('aria-pressed', soundOn); };
+syncSound();
+sbtn.onclick = () => { soundOn = !soundOn; store.set('plottwist-sound', soundOn); syncSound(); };
+function tone(fs, type = 'triangle') {
+  if (!soundOn) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime;
+    fs.forEach((f, i) => {
+      const o = actx.createOscillator(), g = actx.createGain(), s = t + i * .075;
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, s); g.gain.exponentialRampToValueAtTime(.11, s + .015); g.gain.exponentialRampToValueAtTime(.0001, s + .22);
+      o.connect(g).connect(actx.destination); o.start(s); o.stop(s + .25);
+    });
+  } catch (e) {}
+}
+const sfx = { good: () => tone([523, 659, 784]), bad: () => tone([196, 165], 'sawtooth'), tick: () => tone([880]), win: () => tone([523, 659, 784, 1047]) };
+
+/* ---------- home ---------- */
+let heroRAF = 0;
+function starsHTML(n, of) { let s = ''; for (let i = 0; i < of; i++) s += i < n ? '★' : '<span class="off">★</span>'; return `<span class="stars" aria-label="${n} of ${of} stars">${s}</span>`; }
+
+function renderHome() {
+  S = null; draws = []; closeDrawer(); setScore();
+  const tw = 'Twist'.split('').map((ch, i) => `<span style="transform:translateY(${(Math.sin(i * 1.3) * .09).toFixed(3)}em)">${ch}</span>`).join('');
+  screen.innerHTML = `
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Graphs of functions · Lesson 22.1</p>
+      <h1>Plot <span class="tw">${tw}</span></h1>
+      <p class="lede">Every equation draws a shape. Learn to read the shape from the equation, then prove it on the grid.</p>
+      <div class="hero-actions">
+        <button class="btn primary" data-zone="lines">Start with lines</button>
+        <button class="btn" data-mix>Mixed challenge</button>
+      </div>
+    </div>
+    <figure class="hero-fig"><canvas id="heroCv" aria-label="A curve morphing between a line, a parabola, a wave and an exponential"></canvas><figcaption><span id="heroEq"></span><small id="heroKind"></small></figcaption></figure>
+  </section>
+  <section>
+    <h2 class="sec">Choose a zone</h2>
+    <div class="zone-grid">
+      ${ZONES.map(z => `<button class="zcard" data-zone="${z.id}" style="--z:var(--${z.col})">
+        <canvas data-icon="${z.id}" aria-hidden="true"></canvas>
+        <h3>${z.name}</h3><p>${z.sub}</p>
+        <div class="meta">${starsHTML(best[z.id] || 0, z.rounds.length)}<span>${z.rounds.length} rounds</span></div>
+      </button>`).join('')}
+      <button class="zcard mixcard" data-mix>
+        <canvas data-icon="mix" aria-hidden="true"></canvas>
+        <h3>Mixed challenge</h3><p>10 random rounds from every zone</p>
+        <div class="meta"><span>Best score</span><span>${(best.mix || 0).toLocaleString()}</span></div>
+      </button>
+    </div>
+  </section>
+  <section class="how">
+    <div><h3>Pick the graph</h3><p>Read an equation and spot its graph among four look-alikes.</p></div>
+    <div><h3>Plot the key points</h3><p>Tap the grid to place intercepts, vertices, maxima and minima. Get them all and the curve draws itself.</p></div>
+    <div><h3>Tune the curve</h3><p>Drag sliders for a, b, h and k and watch what each one does to the shape.</p></div>
+  </section>`;
+  screen.querySelectorAll('[data-zone]').forEach(b => b.onclick = () => renderIntro(b.dataset.zone));
+  screen.querySelectorAll('[data-mix]').forEach(b => b.onclick = startMix);
+  screen.querySelectorAll('canvas[data-icon]').forEach(cv => {
+    const id = cv.dataset.icon;
+    if (id === 'mix') {
+      const win = { x: [-5, 5], y: [-3, 3], gx: 1, gy: 1, aspect: .5 };
+      reg(() => drawGraph(cv, win, { curves: [{ f: x => .5 * x + 1, col: 'c1', w: 2.4 }, { f: x => .3 * x * x - 2.5, col: 'c2', w: 2.4 }, { f: x => 1.6 * Math.sin(x * 1.3), col: 'c3', w: 2.4 }, { f: x => 2 ** x - 2, col: 'c4', w: 2.4 }] }, 'c1'));
+    } else { const z = ZMAP[id]; reg(() => drawGraph(cv, z.icon.win, { curves: z.icon.curves }, z.col)); }
+  });
+  startHero();
+}
+
+function startHero() {
+  cancelAnimationFrame(heroRAF);
+  const cv = $('#heroCv'); if (!cv) return;
+  const win = { x: [-6, 6], y: [-4, 4], gx: 1, gy: 1, lx: 2, ly: 2, aspect: .68 };
+  const seq = [
+    { f: x => .5 * x + 1, e: 'y = 0.5x + 1', k: 'linear', z: 'c1' },
+    { f: x => .5 * (x - 1) ** 2 - 3, e: 'y = 0.5(x − 1)² − 3', k: 'quadratic', z: 'c2' },
+    { f: x => 2 * Math.sin(x * 60 * DEG), e: 'y = 2 sin(60x)°', k: 'trigonometric', z: 'c3' },
+    { f: x => 2 ** x - 2, e: 'y = 2<sup>x</sup> − 2', k: 'exponential', z: 'c4' }
+  ];
+  const eqEl = $('#heroEq'), kEl = $('#heroKind');
+  let state = { i: 0, t: 0 };
+  const draw = () => {
+    const a = seq[state.i], b = seq[(state.i + 1) % seq.length], t = state.t;
+    const e = t < .5 ? a : b;
+    const s = t * t * (3 - 2 * t);
+    drawGraph(cv, win, { curves: [{ f: x => a.f(x) * (1 - s) + b.f(x) * s, col: e.z, w: 3.6 }] }, e.z);
+  };
+  const label = i => { eqEl.innerHTML = eq(seq[i].e); kEl.textContent = seq[i].k; };
+  label(0); reg(draw);
+  if (reduced) {
+    const iv = setInterval(() => { if (!document.body.contains(cv)) return clearInterval(iv); state.i = (state.i + 1) % seq.length; state.t = 0; label(state.i); draw(); }, 2600);
+    return;
+  }
+  let start = performance.now();
+  const HOLD = 1700, MORPH = 900;
+  const loop = now => {
+    if (!document.body.contains(cv)) return;
+    const el = now - start;
+    if (el < HOLD) state.t = 0;
+    else if (el < HOLD + MORPH) { const nt = (el - HOLD) / MORPH; if (state.t < .5 && nt >= .5) label((state.i + 1) % seq.length); state.t = nt; }
+    else { state.i = (state.i + 1) % seq.length; state.t = 0; start = now; }
+    draw();
+    heroRAF = requestAnimationFrame(loop);
+  };
+  heroRAF = requestAnimationFrame(loop);
+}
+
+/* ---------- notes ---------- */
+function trigTable() {
+  return `<div class="tablewrap"><table>
+  <tr><th></th><th>${eq('y = sin x')}</th><th>${eq('y = cos x')}</th><th>${eq('y = tan x')}</th></tr>
+  <tr><th>Period</th><td>360°</td><td>360°</td><td>180°</td></tr>
+  <tr><th>Domain</th><td>all real numbers</td><td>all real numbers</td><td>all real numbers except ±90°, ±270°, …</td></tr>
+  <tr><th>Maximum value</th><td>1</td><td>1</td><td>none</td></tr>
+  <tr><th>Minimum value</th><td>−1</td><td>−1</td><td>none</td></tr>
+  <tr><th>x-intercepts (0° to 360°)</th><td>0°, 180°, 360°</td><td>90°, 270°</td><td>0°, 180°, 360°</td></tr>
+  </table></div>`;
+}
+function notesHTML(z) {
+  return `<div class="notes">${z.notes.map((n, i) => `<article class="note">
+    <h3>${n.h}</h3><p>${n.body}</p>
+    ${n.figs ? `<div class="figs">${n.figs.map((f, j) => `<figure><canvas data-fig="${i}-${j}"></canvas><figcaption>${f.cap}</figcaption></figure>`).join('')}</div>` : ''}
+    ${n.table ? trigTable() : ''}
+    ${n.foot ? `<p class="foot">${n.foot}</p>` : ''}
+  </article>`).join('')}</div>`;
+}
+function drawNotes(root, z) {
+  root.querySelectorAll('canvas[data-fig]').forEach(cv => {
+    const [i, j] = cv.dataset.fig.split('-').map(Number), f = z.notes[i].figs[j];
+    reg(() => drawGraph(cv, f.win || W.note, { curves: f.curves, points: f.points }, z.col));
+  });
+}
+
+function renderIntro(id) {
+  const z = ZMAP[id]; S = null; draws = []; setScore();
+  screen.innerHTML = `<section class="intro" style="--z:var(--${z.col})">
+    <button class="linkbtn" data-home>← All zones</button>
+    <div class="intro-head"><div><p class="eyebrow">Field notes · read first, then play</p><h2>${z.name}</h2></div>
+      <button class="btn primary" data-start>Start ${z.rounds.length} rounds →</button></div>
+    ${notesHTML(z)}
+    <div class="start-row"><button class="btn primary" data-start>I'm ready, start the rounds →</button><button class="btn" data-home>Back to zones</button></div>
+  </section>`;
+  drawNotes(screen, z);
+  screen.querySelectorAll('[data-home]').forEach(b => b.onclick = renderHome);
+  screen.querySelectorAll('[data-start]').forEach(b => b.onclick = () => startZone(id));
+  scrollTo({ top: 0 });
+}
+
+/* drawer */
+const overlay = $('#overlay');
+function openDrawer(z) {
+  overlay.innerHTML = `<aside class="drawer" role="dialog" aria-label="${z.name} notes" style="--z:var(--${z.col})">
+    <div class="drawer-head"><h2>${z.name} notes</h2><button class="btn small" data-close>Close</button></div>${notesHTML(z)}</aside>`;
+  overlay.hidden = false;
+  drawNotes(overlay, z);
+  overlay.querySelector('[data-close]').onclick = closeDrawer;
+  overlay.onclick = e => { if (e.target === overlay) closeDrawer(); };
+  overlay.querySelector('[data-close]').focus();
+}
+function closeDrawer() { overlay.hidden = true; overlay.innerHTML = ''; }
+addEventListener('keydown', e => { if (e.key === 'Escape' && !overlay.hidden) closeDrawer(); });
+
+/* ---------- game flow ---------- */
+const prep = (r, z) => ({ ...r, _z: z.id, _zc: z.col, _miss: 0 });
+function startZone(id) {
+  const z = ZMAP[id];
+  S = { mode: 'zone', zone: id, list: z.rounds.map(r => prep(r, z)), i: 0, score: 0, streak: 0, res: [] };
+  renderRound();
+}
+function startMix() {
+  const all = ZONES.flatMap(z => z.rounds.map(r => prep(r, z)));
+  // keep plot rounds that depend on a previous round out of the shuffle's tricky spots: just shuffle
+  const pick = shuffle(all).filter(r => !/^And |^So |^The vertex of/.test(typeof r.q === 'string' ? r.q.replace(/<[^>]+>/g, '') : '')).slice(0, 10);
+  S = { mode: 'mix', zone: null, list: pick, i: 0, score: 0, streak: 0, res: [] };
+  renderRound();
+}
+const cur = () => S.list[S.i];
+
+function hud(r) {
+  const z = ZMAP[r._z];
+  const dots = S.list.map((x, i) => {
+    const res = S.res[i]; let cls = i === S.i ? 'cur' : ''; if (res) cls = res.star ? 'star' : 'done';
+    return `<li class="${cls}" title="Round ${i + 1}"></li>`;
+  }).join('');
+  return `<div class="hud">
+    <button class="linkbtn" data-home>← Zones</button>
+    <span class="ztag">${S.mode === 'mix' ? 'Mixed · ' : ''}${z.name}</span>
+    <ol class="dots" aria-label="Round ${S.i + 1} of ${S.list.length}">${dots}</ol>
+    <span class="spacer"></span>
+    <span class="streak ${S.streak >= 3 ? 'hot' : ''}">streak ${S.streak}</span>
+    <button class="btn small" data-notes>Notes</button>
+  </div>`;
+}
+
+function renderRound() {
+  draws = []; closeDrawer();
+  const r = cur(), z = ZMAP[r._z];
+  const solo = r.t === 'quiz' && !r.graph && !r.reveal;
+  screen.innerHTML = `<section class="play" style="--z:var(--${z.col})">
+    ${hud(r)}
+    <div class="pgrid ${solo ? 'solo' : ''}">
+      <div class="qbox"><p class="kind">${KIND[r.t]} · ${S.i + 1}/${S.list.length}</p>
+        <h2 class="qtext">${r.q}</h2>${r.eq ? `<div class="bigeq">${eq(r.eq)}</div>` : ''}</div>
+      ${solo ? '' : `<div class="stage" id="stage"></div>`}
+      <div class="ctrl" id="ctrl"></div>
+      <div class="fbz" id="fb" aria-live="polite"></div>
+    </div></section>`;
+  screen.querySelector('[data-home]').onclick = renderHome;
+  screen.querySelector('[data-notes]').onclick = () => openDrawer(z);
+  ({ pick: setupPick, which: setupChoice, quiz: setupChoice, plot: setupPlot, shape: setupShape })[r.t](r);
+  scrollTo({ top: 0 });
+}
+
+function fb(kind, title, html, extra = '', pts = '') {
+  $('#fb').innerHTML = `<div class="fb ${kind}"><p class="h"><span>${title}</span>${pts ? `<span class="pts">${pts}</span>` : ''}</p><p>${html}</p>${extra ? `<div class="row">${extra}</div>` : ''}</div>`;
+}
+const PRAISE = ['Nailed it.', 'Correct.', 'Spot on.', 'Exactly right.', 'Sharp eye.'];
+
+function miss(r, msg) {
+  r._miss++; S.streak = 0; sfx.bad();
+  const hs = $('.streak'); if (hs) { hs.textContent = 'streak 0'; hs.classList.remove('hot'); }
+  fb('bad', 'Not quite.', msg || `Hint: ${r.hint}`);
+}
+
+function win(r, opts = {}) {
+  if (r._won) return; r._won = true;
+  const allowed = r.t === 'plot' ? 1 : 0;
+  const star = !opts.shown && !r._hint && r._miss <= allowed;
+  if (star) S.streak++; else S.streak = 0;
+  const pts = opts.shown ? 0 : star ? 100 + Math.min(S.streak - 1, 5) * 20 : 40;
+  S.score += pts; setScore();
+  S.res[S.i] = { star };
+  (star ? sfx.good : sfx.tick)();
+  const last = S.i === S.list.length - 1;
+  const title = opts.shown ? 'Here is how it works.' : star ? PRAISE[Math.floor(Math.random() * PRAISE.length)] : 'Got there.';
+  fb(opts.shown ? 'info' : 'good', title, r.explain,
+     `<button class="btn primary" id="next">${last ? 'See results →' : 'Next round →'}</button>`,
+     pts ? `+${pts}${star ? ' ★' : ''}` : '');
+  const hs = $('.streak'); if (hs) { hs.textContent = 'streak ' + S.streak; hs.classList.toggle('hot', S.streak >= 3); }
+  const d = screen.querySelectorAll('.dots li')[S.i]; if (d) d.className = star ? 'star' : 'done';
+  const nb = $('#next'); nb.onclick = () => { if (last) renderEnd(); else { S.i++; renderRound(); } };
+  nb.focus({ preventScroll: true });
+  if (innerWidth < 820) $('#fb').scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
+}
+
+/* pick: equation → choose graph */
+function setupPick(r) {
+  r._order = r._order || shuffle(r.opts);
+  const stage = $('#stage');
+  stage.innerHTML = `<div class="picks">${r._order.map((o, i) => `<button class="pk" data-i="${i}" aria-label="Graph ${'ABCD'[i]}"><span class="lab">${'ABCD'[i]}</span><canvas></canvas><span class="peq"></span></button>`).join('')}</div>`;
+  $('#ctrl').innerHTML = `<p class="tip">Tap the graph that matches the equation. Stuck? Open Notes.</p>`;
+  stage.querySelectorAll('.pk').forEach(b => {
+    const o = r._order[+b.dataset.i], cv = b.querySelector('canvas');
+    reg(() => drawGraph(cv, r.win, { curves: o.curves }, r._zc));
+    b.onclick = () => {
+      if (r._won) return;
+      if (o.ok) {
+        b.classList.add('right');
+        stage.querySelectorAll('.pk').forEach(x => { x.disabled = true; x.querySelector('.peq').innerHTML = eq(r._order[+x.dataset.i].e); });
+        win(r);
+      } else {
+        b.classList.add('wrong', 'shake'); b.disabled = true; b.querySelector('.peq').innerHTML = eq(o.e);
+        miss(r, `That one is ${eq(o.e)}. Hint: ${r.hint}`);
+      }
+    };
+  });
+}
+
+/* which / quiz: choose text option */
+function setupChoice(r) {
+  r._order = r._order || shuffle(r.opts);
+  const stage = $('#stage');
+  if (stage) {
+    if (r.t === 'which' || r.graph) {
+      const g = r.graph || { win: r.win, curves: r.curves, points: r.points };
+      stage.innerHTML = `<canvas aria-label="Graph"></canvas>`;
+      const cv = stage.querySelector('canvas');
+      reg(() => drawGraph(cv, g.win, { curves: g.curves, points: g.points }, r._zc));
+    } else {
+      stage.innerHTML = `<div class="placeholder">The graph appears here once you answer.</div>`;
+    }
+  }
+  const ctrl = $('#ctrl');
+  ctrl.innerHTML = r._order.map((o, i) => `<button class="opt" data-i="${i}"><span class="k">${'ABCD'[i]}</span><span>${o.e ? eq(o.e) : o.h}</span></button>`).join('');
+  ctrl.querySelectorAll('.opt').forEach(b => {
+    const o = r._order[+b.dataset.i];
+    b.onclick = () => {
+      if (r._won) return;
+      if (o.ok) {
+        b.classList.add('right'); ctrl.querySelectorAll('.opt').forEach(x => x.disabled = true);
+        if (r.reveal && stage) {
+          stage.innerHTML = `<canvas aria-label="Graph"></canvas>`;
+          const cv = stage.querySelector('canvas'), g = r.reveal;
+          let p = reduced ? 1 : 0; const t0 = performance.now();
+          const draw = () => drawGraph(cv, g.win, { curves: g.curves.map(c => ({ ...c, prog: c.col === 'ghost' ? 1 : p })), points: p >= 1 ? g.points : [] }, r._zc);
+          reg(draw);
+          if (p < 1) { const step = now => { p = Math.min(1, (now - t0) / 900); draw(); if (p < 1 && document.body.contains(cv)) requestAnimationFrame(step); }; requestAnimationFrame(step); }
+        }
+        win(r);
+      } else {
+        b.classList.add('wrong', 'shake'); b.disabled = true;
+        miss(r);
+      }
+    };
+  });
+}
+
+/* plot: tap key points */
+function setupPlot(r) {
+  r._found = []; r._marks = []; r._show = false;
+  const stage = $('#stage'), [sx, sy] = r.snap;
+  stage.innerHTML = `<canvas class="tap" tabindex="0" aria-label="Grid. Tap to place a point, or use arrow keys and Enter."></canvas>
+    <div class="cap"><span id="readout">Tap the grid to place a point</span><span>snaps to ${num(sx)}${r.win.deg ? '°' : ''} × ${num(sy)}</span></div>`;
+  const cv = stage.querySelector('canvas'), ro = $('#readout');
+  const ctrl = $('#ctrl');
+  const renderList = () => {
+    ctrl.innerHTML = `<ul class="check">${r.targets.map((t, i) => `<li class="${r._found.includes(i) ? 'got' : ''}"><span>${t.n}</span><span>${r._found.includes(i) ? '✓ ' + fmtC(t.x, t.y, r.win.deg) : '?'}</span></li>`).join('')}</ul>
+      <p class="tip">Work each point out first, then tap it on the grid. One wrong tap is free.</p>
+      ${r._miss >= 3 && !r._won ? `<button class="btn small" id="showme">Show me the points</button>` : ''}`;
+    const sm = $('#showme'); if (sm) sm.onclick = () => { r._found = r.targets.map((_, i) => i); renderList(); finish(true); };
+  };
+  let cursor = null, prog = 0;
+  const draw = () => {
+    const pts = r._found.map(i => ({ x: r.targets[i].x, y: r.targets[i].y, label: true }));
+    r._marks.forEach(m => pts.push({ x: m.x, y: m.y, kind: 'miss' }));
+    const curves = r._show ? [...(r.extras || []).map(c => ({ ...c, prog })), { ...r.curve, prog }] : [];
+    drawGraph(cv, r.win, { curves, points: pts, cursor: r._show ? null : cursor }, r._zc);
+  };
+  reg(draw); renderList();
+  const snapV = (v, s) => Math.round(v / s) * s;
+  const toWorld = e => {
+    const b = cv.getBoundingClientRect(), w = r.win;
+    const x = w.x[0] + (e.clientX - b.left) / b.width * (w.x[1] - w.x[0]);
+    const y = w.y[1] - (e.clientY - b.top) / b.height * (w.y[1] - w.y[0]);
+    return clampC({ x: snapV(x, sx), y: snapV(y, sy) });
+  };
+  const clampC = p => ({ x: Math.min(Math.max(p.x, Math.ceil(r.win.x[0] / sx) * sx), Math.floor(r.win.x[1] / sx) * sx), y: Math.min(Math.max(p.y, Math.ceil(r.win.y[0] / sy) * sy), Math.floor(r.win.y[1] / sy) * sy) });
+  const same = (a, b) => Math.abs(a.x - b.x) < 1e-6 && Math.abs(a.y - b.y) < 1e-6;
+  const showRO = p => { ro.textContent = p ? 'Point ' + fmtC(p.x, p.y, r.win.deg) : 'Tap the grid to place a point'; };
+  function finish(shown) {
+    cursor = null; r._anim = true; r._show = true; showRO(null);
+    const t0 = performance.now();
+    if (reduced) { prog = 1; draw(); r._anim = false; win(r, { shown }); return; }
+    const step = now => {
+      prog = Math.min(1, (now - t0) / 1000); draw();
+      if (prog < 1 && document.body.contains(cv)) requestAnimationFrame(step); else { r._anim = false; win(r, { shown }); }
+    };
+    requestAnimationFrame(step);
+  }
+  function place(p) {
+    if (r._won || r._anim) return;
+    const idx = r.targets.findIndex((t, i) => !r._found.includes(i) && same(t, p));
+    if (idx >= 0) {
+      r._found.push(idx); sfx.tick(); renderList(); draw();
+      const t = r.targets[idx];
+      if (r._found.length === r.targets.length) finish(false);
+      else fb('info', `${t.n[0].toUpperCase() + t.n.slice(1)} placed.`, `${fmtC(t.x, t.y, r.win.deg)} is right. ${r.targets.length - r._found.length} to go.`);
+      return;
+    }
+    if (r.targets.some(t => same(t, p))) { fb('info', 'Already placed.', 'That point is already on the grid. Find the next one.'); return; }
+    r._marks.push(p); draw();
+    setTimeout(() => { r._marks.shift(); draw(); }, 1400);
+    let y = r.curve.f(p.x);
+    const onCurve = isFinite(y) && Math.abs(y - p.y) <= sy / 2 + 1e-9 && (!r.curve.dom || (p.x >= r.curve.dom[0] && p.x <= r.curve.dom[1]));
+    const where = fmtC(p.x, p.y, r.win.deg);
+    miss(r, onCurve ? `${where} lies on the curve, but it is not one of the points asked for. Hint: ${r.hint}` : `${where} is not on this graph. Hint: ${r.hint}`);
+    renderList();
+  }
+  cv.addEventListener('pointermove', e => { if (r._won || r._anim) return; cursor = toWorld(e); showRO(cursor); draw(); });
+  cv.addEventListener('pointerdown', e => { if (r._won || r._anim) return; cursor = toWorld(e); showRO(cursor); draw(); });
+  cv.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { cursor = null; showRO(null); draw(); } });
+  cv.addEventListener('pointerup', e => { if (r._won || r._anim) return; place(toWorld(e)); if (e.pointerType !== 'mouse') { cursor = null; draw(); } });
+  cv.addEventListener('focus', () => { if (!cursor) { cursor = clampC({ x: snapV((r.win.x[0] + r.win.x[1]) / 2, sx), y: snapV((r.win.y[0] + r.win.y[1]) / 2, sy) }); showRO(cursor); draw(); } });
+  cv.addEventListener('keydown', e => {
+    if (!cursor || r._won || r._anim) return;
+    const m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+    if (m) { e.preventDefault(); cursor = clampC({ x: cursor.x + m[0] * sx, y: cursor.y + m[1] * sy }); showRO(cursor); draw(); }
+    else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); place(cursor); }
+  });
+}
+
+/* shape: sliders */
+function setupShape(r) {
+  const v = {}; r.params.forEach(p => v[p.k] = p.start);
+  const stage = $('#stage');
+  stage.innerHTML = `<canvas aria-label="Graph with dashed target curve"></canvas><div class="cap"><span>dashed = target</span><span>solid = yours</span></div>`;
+  const cv = stage.querySelector('canvas');
+  const fOf = (k, P) => k === 'lin' ? (x => P.a * x + P.b) : k === 'quad' ? (x => P.a * (x - P.h) ** 2 + P.k) : (x => Math.pow(P.a, x));
+  const coef = a => a === 1 ? '' : a === -1 ? '−' : num(a);
+  const eqStr = P => {
+    if (r.kind === 'lin') {
+      if (P.a === 0) return `y = ${num(P.b)}`;
+      return `y = ${coef(P.a)}x` + (P.b > 0 ? ` + ${num(P.b)}` : P.b < 0 ? ` − ${num(-P.b)}` : '');
+    }
+    if (r.kind === 'quad') {
+      if (P.a === 0) return `y = ${num(P.k)}`;
+      const inner = P.h === 0 ? 'x²' : `(x ${P.h > 0 ? '−' : '+'} ${num(Math.abs(P.h))})²`;
+      return `y = ${coef(P.a)}${inner}` + (P.k > 0 ? ` + ${num(P.k)}` : P.k < 0 ? ` − ${num(-P.k)}` : '');
+    }
+    return `y = ${num(P.a)}<sup>x</sup>`;
+  };
+  const info = P => {
+    if (r.kind === 'lin') return P.a === 0 ? `a = 0 turns it into a constant function: a horizontal line.` : `Slope ${num(P.a)} (${P.a > 0 ? 'rises' : 'falls'} left to right) · y-intercept ${num(P.b)}`;
+    if (r.kind === 'quad') return P.a === 0 ? `a = 0 is not allowed: the x² term vanishes and you get a horizontal line.` : `Opens ${P.a > 0 ? 'upward' : 'downward'} · vertex (${num(P.h)}, ${num(P.k)}) · axis of symmetry x = ${num(P.h)}`;
+    return P.a === 1 ? `a = 1 is not allowed: 1ˣ = 1 for every x, a horizontal line.` : `${P.a > 1 ? 'a > 1: rises' : '0 < a < 1: falls'} left to right · always passes through (0, 1)`;
+  };
+  const keyPt = P => r.kind === 'lin' ? { x: 0, y: P.b } : r.kind === 'quad' ? (P.a === 0 ? null : { x: P.h, y: P.k }) : { x: 0, y: 1 };
+  const ctrl = $('#ctrl');
+  ctrl.innerHTML = `<div class="live"><div id="liveEq"></div><p id="liveInfo"></p></div>
+    ${r.params.map(p => `<label class="slider"><span class="m"><i>${p.k}</i></span><input type="range" id="sl-${r._z}-${p.k}" min="0" max="${p.vals.length - 1}" step="1" value="${p.vals.indexOf(p.start)}" data-k="${p.k}"><output>${num(p.start)}</output></label>`).join('')}
+    <div><button class="btn small" id="hintbtn">Hint (costs the star)</button></div>`;
+  const draw = () => {
+    const kp = keyPt(v);
+    drawGraph(cv, r.win, { curves: [{ f: fOf(r.kind, r.target), col: 'ghost', dash: 1, w: 4.5 }, { f: fOf(r.kind, v) }], points: kp ? [{ ...kp, label: true }] : [] }, r._zc);
+  };
+  const update = () => {
+    $('#liveEq').innerHTML = eq(eqStr(v)); $('#liveInfo').textContent = info(v); draw();
+    if (!r._won && r.params.every(p => Math.abs(v[p.k] - r.target[p.k]) < 1e-9)) {
+      ctrl.querySelectorAll('input').forEach(i => i.disabled = true); $('#hintbtn').disabled = true; win(r);
+    }
+  };
+  ctrl.querySelectorAll('input[type=range]').forEach(inp => {
+    const p = r.params.find(q => q.k === inp.dataset.k);
+    inp.addEventListener('input', () => { v[p.k] = p.vals[+inp.value]; inp.nextElementSibling.textContent = num(v[p.k]); update(); });
+  });
+  $('#hintbtn').onclick = () => { r._hint = true; fb('info', 'Hint', r.hint); $('#hintbtn').disabled = true; };
+  reg(draw); update();
+}
+
+/* ---------- end ---------- */
+function renderEnd() {
+  draws = [];
+  const n = S.list.length, stars = S.res.filter(x => x && x.star).length;
+  total += S.score; store.set('plottwist-total', total);
+  let z = S.mode === 'zone' ? ZMAP[S.zone] : null;
+  if (z) { best[z.id] = Math.max(best[z.id] || 0, stars); }
+  else best.mix = Math.max(best.mix || 0, S.score);
+  store.set('plottwist-best', best);
+  sfx.win();
+  const ratio = stars / n;
+  const verdict = ratio >= .85 ? 'Graph master.' : ratio >= .5 ? 'Solid sketching.' : 'Keep plotting.';
+  const col = z ? z.col : 'ink';
+  const ideas = z ? z.notes.map(nt => `<li><b>${nt.h}.</b> ${nt.foot || nt.body}</li>`).join('')
+    : ZONES.map(zz => `<li><b>${zz.name}:</b> ${zz.notes[0].foot || zz.notes[0].body}</li>`).join('');
+  const nextZ = z ? ZONES[(ZONES.indexOf(z) + 1) % ZONES.length] : null;
+  screen.innerHTML = `<section class="end" style="--z:var(--${col})">
+    <div>
+      <p class="eyebrow">${z ? z.name : 'Mixed challenge'} complete</p>
+      <h2>${verdict}</h2>
+      <div class="bigstars">${starsHTML(stars, n)}</div>
+      <p>A star means you got the round on the first try (plot rounds allow one free miss).</p>
+      <div class="stats"><div><b>${S.score.toLocaleString()}</b><span>points</span></div><div><b>${stars}/${n}</b><span>stars</span></div><div><b>${Math.round(ratio * 100)}%</b><span>first-try</span></div></div>
+      <div class="hero-actions">
+        ${nextZ ? `<button class="btn primary" data-next>Next: ${nextZ.name} →</button>` : `<button class="btn primary" data-mix>Play another mix</button>`}
+        <button class="btn" data-again>Replay</button>
+        <button class="btn" data-home>All zones</button>
+      </div>
+    </div>
+    <div class="recap"><h3>Key ideas to remember</h3><ul>${ideas}</ul></div>
+  </section>`;
+  const again = S.mode === 'zone' ? () => startZone(S.zone) : startMix;
+  screen.querySelector('[data-again]').onclick = again;
+  screen.querySelector('[data-home]').onclick = renderHome;
+  const nb = screen.querySelector('[data-next]'); if (nb) nb.onclick = () => renderIntro(nextZ.id);
+  const mb = screen.querySelector('[data-mix]'); if (mb) mb.onclick = startMix;
+  S = null;
+  scrollTo({ top: 0 });
+}
+
+$('#brand').onclick = renderHome;
+renderHome();
+})();
+</script>
+
+</body></html>
